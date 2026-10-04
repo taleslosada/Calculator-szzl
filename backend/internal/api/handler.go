@@ -10,42 +10,34 @@ import (
 	"calculator/internal/calculator"
 )
 
-const maxBodyBytes = 1 << 10 // 1 KiB is plenty for a calculation request.
+const maxBodyBytes = 1 << 10 
 
-// CalculateRequest is the JSON body for POST /api/v1/calculate.
-// Pointers let us tell "missing" apart from a legitimate 0.
 type CalculateRequest struct {
 	Operation string   `json:"operation"`
 	A         *float64 `json:"a"`
 	B         *float64 `json:"b,omitempty"`
 }
 
-// CalculateResponse is returned on success.
 type CalculateResponse struct {
 	Operation string    `json:"operation"`
 	Operands  []float64 `json:"operands"`
 	Result    float64   `json:"result"`
 }
 
-// OperationInfo describes a supported operation for GET /api/v1/operations.
 type OperationInfo struct {
 	Name  string `json:"name"`
 	Arity int    `json:"arity"`
 }
 
-// ErrorBody is the envelope for every error response.
 type ErrorBody struct {
 	Error ErrorDetail `json:"error"`
 }
 
-// ErrorDetail carries a stable machine-readable code plus a human message.
 type ErrorDetail struct {
 	Code    string `json:"code"`
 	Message string `json:"message"`
 }
 
-// NewRouter wires all API routes. Uses the Go 1.22+ method-aware ServeMux,
-// so no third-party router is needed.
 func NewRouter() *http.ServeMux {
 	mux := http.NewServeMux()
 	mux.HandleFunc("POST /api/v1/calculate", handleCalculate)

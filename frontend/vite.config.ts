@@ -5,8 +5,6 @@ import { defineConfig } from 'vite'
 export default defineConfig({
   plugins: [react()],
   server: {
-    // In development, forward API calls to the Go backend so the browser
-    // sees a single origin (no CORS configuration needed).
     proxy: {
       '/api': process.env.VITE_API_TARGET ?? 'http://localhost:8080',
     },
